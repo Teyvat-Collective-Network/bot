@@ -11,7 +11,8 @@ const app = new Elysia()
             stream: PinoPretty({ colorize: true, ignore: "hostname,pid" }),
         }),
     )
-    .onBeforeHandle(({ log, path, request }) => log.info(`${request.method} ${path}`));
+    .onBeforeHandle(({ log, path, request }) => log.info(`${request.method} ${path}`))
+    .onError(({ error }) => console.error(error));
 
 export type App = typeof app;
 
