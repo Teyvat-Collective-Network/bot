@@ -2,12 +2,14 @@
     "name": "bot",
     "version": "1.0.50",
     "scripts": {
-        "dev": "bun run src/index.ts"
+        "dev": "bun run src/index.ts | pino-pretty -i hostname,pid"
     },
     "dependencies": {
-        "@bogeychan/elysia-logger": "^0.0.10",
+        "@elysiajs/bearer": "^0.7.0",
         "discord.js": "^14.13.0",
         "elysia": "latest",
+        "octokit": "^3.1.1",
+        "pino": "^8.15.1",
         "pino-pretty": "^10.2.0"
     },
     "devDependencies": {
