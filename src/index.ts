@@ -6,14 +6,13 @@ import routes from "./lib/routes.js";
 const app = new Elysia()
     .derive(() => ({ log: logger }))
     .use(bearer())
-    .derive(({ bearer }) => {
-        return { bearer: bearer! };
-    })
     .onBeforeHandle(({ bearer, log, path, request }) => {
-        if (!bearer) return new Response(JSON.stringify({ message: "Authentication not provided." }), { status: 403 });
+        let id = "anon";
 
-        const [, payload] = bearer.split(".");
-        const { id } = JSON.parse(Buffer.from(payload, "base64url").toString("utf-8"));
+        if (bearer) {
+            const [, payload] = bearer.split(".");
+            id = JSON.parse(Buffer.from(payload, "base64url").toString("utf-8")).id;
+        }
 
         log.info({ location: "fada92a0-b701-4491-ab62-9653cb40dc90" }, `${request.method} ${path} [${id}]`);
     })
