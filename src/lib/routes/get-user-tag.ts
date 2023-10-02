@@ -14,6 +14,6 @@ export default (app: App) =>
             }
         },
         {
-            params: t.Object({ id: t.String({ pattern: "^[1-9][0-9]{16,19}$", default: "1234567890987654321" }) }),
+            params: t.Object({ id: t.String({ pattern: "^[1-9][0-9]{16,19}$", default: "1012321234321232101" }) }),
         },
     );
