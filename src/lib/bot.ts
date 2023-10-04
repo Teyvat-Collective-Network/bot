@@ -20,7 +20,7 @@ import logger from "./logger.js";
 import { failure, success } from "./responses.js";
 import { reply } from "./utils.js";
 
-const bot = new Client({ allowedMentions: { parse: [] }, intents: IntentsBitField.Flags.Guilds });
+const bot = new Client({ allowedMentions: { parse: [] }, intents: IntentsBitField.Flags.Guilds | IntentsBitField.Flags.GuildMembers });
 await bot.login(Bun.env.DISCORD_TOKEN);
 
 await new Promise((r) => bot.on(Events.ClientReady, r));
