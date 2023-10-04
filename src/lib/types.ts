@@ -27,6 +27,7 @@ export type TCNUser = {
     voter: boolean;
     council: boolean;
     staff: boolean;
+    observerSince: number;
 };
 
 export type TCNGuild = {
