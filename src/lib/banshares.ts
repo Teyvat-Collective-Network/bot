@@ -278,7 +278,7 @@ export async function updateDashboard(token: string | null) {
 
             pending.push(id);
         } catch {
-            await api(token, `DELETE /banshares/${id}`);
+            await api(token, `DELETE /banshares/${id}`).catch((error) => logger.error({ location: "2d6dffae-1f39-48d5-9145-b4dc3c3c85a8", error }));
         }
 
     const data = pending.map((x) => `- ${channels.BANSHARE_LOGS.url}/${x}`).join("\n") || "No banshares are pending!";

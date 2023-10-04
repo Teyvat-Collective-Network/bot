@@ -1,7 +1,7 @@
 import { HasUser, getUserId } from "./extract.js";
 import logger from "./logger.js";
 
-export default async function (token: string | null, route: string, body?: any, options?: RequestInit) {
+export default async function (token: string | null | undefined, route: string, body?: any, options?: RequestInit) {
     let request = route.startsWith("!");
     if (request) route = route.slice(1);
 

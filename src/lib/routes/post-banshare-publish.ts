@@ -87,6 +87,7 @@ export default (app: App) =>
                             return;
                         }
 
+                        await api(bearer, `POST /banshares/${id}/execute/${guild}?auto=true`);
                         await execute(channel.guild, logs, id, daedalus, crosspost, reason, users);
                     } catch (error) {
                         if (typeof error !== "string") log.error({ location: "b3aaa4b3-e724-4f0f-ba42-c50e1711b36e", error });
@@ -105,7 +106,7 @@ export default (app: App) =>
             await api(bearer, `PUT /banshares/${id}/crossposts`, { crossposts });
             await message.edit({ components: components(true, severity) });
 
-            updateDashboard(bearer);
+            updateDashboard(bearer!);
         },
         {
             params: t.Object({

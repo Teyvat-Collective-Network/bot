@@ -18,7 +18,7 @@ export default (app: App) =>
             await channels.BOT_LOGS.send(`<@${rejecter}> rejected ${message.url}`);
 
             await message.edit({ embeds: [embed], components: greyButton("Rejected") });
-            updateDashboard(bearer);
+            updateDashboard(bearer!);
         },
         {
             params: t.Object({

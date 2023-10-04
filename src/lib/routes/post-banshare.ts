@@ -66,7 +66,7 @@ export default (app: App) =>
                     }. If you wish to alter the severity, do so with the buttons below the banshare **before** publishing.`,
                 );
 
-                updateDashboard(bearer);
+                updateDashboard(bearer!);
 
                 return { message: post.id };
             } catch (error) {
