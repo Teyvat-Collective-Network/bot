@@ -5,10 +5,10 @@ import bot, { channels } from "../bot.js";
 export default (app: App) =>
     app.post(
         "/apply",
-        async ({ body: { code, mascot, role, roleother, ownerid, nsfw, experience, shortgoals, longgoals, history, additional, user } }) => {
+        async ({ body: { code, id, name, mascot, role, roleother, ownerid, nsfw, experience, shortgoals, longgoals, history, additional, user } }) => {
             const invite = await bot.fetchInvite(code);
 
-            const display = invite.guild!.name.toLowerCase().includes(mascot.toLowerCase()) ? invite.guild!.name : `${invite.guild!.name} (${mascot} Mains)`;
+            const display = name.toLowerCase().includes(mascot.toLowerCase()) ? name : `${name} (${mascot} Mains)`;
 
             const submitter = `<@${user}>${role === "owner" ? "" : ` (on behalf of <@${ownerid}>)`}`;
 
@@ -18,7 +18,7 @@ export default (app: App) =>
                     embeds: [
                         {
                             title: "**New Application**",
-                            description: `**${submitter}** applied for **${display}**. Their role in the server is: ${
+                            description: `**${submitter}** applied for **${display}** (\`${id}\`). Their role in the server is: ${
                                 role !== "other" ? role : roleother
                             }. The server has ${invite.memberCount} members and was created at <t:${Math.floor(invite.guild!.createdTimestamp / 1000)}:f>.`,
                             color: 0x2b2d31,
@@ -59,6 +59,8 @@ export default (app: App) =>
         {
             body: t.Object({
                 code: t.String(),
+                id: t.String(),
+                name: t.String(),
                 mascot: t.String(),
                 role: t.String(),
                 roleother: t.Optional(t.String()),
