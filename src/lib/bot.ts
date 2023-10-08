@@ -32,8 +32,6 @@ const internalCommands: ApplicationCommandData[] = [];
 
 const commandHandlers: Record<number, Record<string, any>> = {};
 
-const commandDir = "./src/commands";
-
 for (const module of readdirSync("./src/commands")) {
     const handlers: Record<string, any> = {};
     const options: ApplicationCommandOptionData[] = [];
@@ -164,11 +162,7 @@ bot.on(Events.InteractionCreate, async (interaction) => {
                             break;
                         default:
                             values.push(null);
-
-                            logger.error(
-                                { location: "3a52f612-3ddd-458e-b1bf-8af7ae6fcdc5", details: `${option.name} (type ${option.type})` },
-                                "Unrecognized option type:",
-                            );
+                            logger.error({ details: `${option.name} (type ${option.type})` }, "3a52f612-3ddd-458e-b1bf-8af7ae6fcdc5 Unrecognized option type:");
                     }
             }
 
@@ -223,8 +217,8 @@ bot.on(Events.InteractionCreate, async (interaction) => {
     } catch (error) {
         if (error instanceof Error) {
             logger.error(
-                { location: "f93aad73-bb0c-4e26-8950-774ae5b77d20", error },
-                `Error handling interaction ${
+                error,
+                `f93aad73-bb0c-4e26-8950-774ae5b77d20 Error handling interaction ${
                     interaction.isCommand() || interaction.isAutocomplete()
                         ? `/${interaction.commandName}${interaction.isAutocomplete() ? " [autocomplete]" : ""}`
                         : interaction.isMessageComponent()
@@ -263,4 +257,5 @@ export const channels = {
     BANSHARE_DASHBOARD: await get<TextChannel>(Bun.env.BANSHARE_DASHBOARD!),
     BANSHARE_LOGS: await get<TextChannel>(Bun.env.BANSHARE_LOGS!),
     BOT_LOGS: await get<TextChannel>(Bun.env.BOT_LOGS!),
+    VOTE_HERE: await get<TextChannel>(Bun.env.VOTE_HERE!),
 };

@@ -218,11 +218,11 @@ export async function execute(
                         body: JSON.stringify({ type: "ban", duration: 0, origin: crosspost.url, reason: `TCN Banshare: ${reason}` }),
                     });
                 } catch (error) {
-                    logger.error({ location: "d5319e95-3c46-4d25-8f00-d1dfc012a682", error }, "Failed to submit banshare data to the Daedalus API:");
+                    logger.error(error, "d5319e95-3c46-4d25-8f00-d1dfc012a682 Failed to submit banshare data to the Daedalus API:");
                 }
             }
         } catch (error) {
-            logger.error({ location: "6591cdd0-b114-44c9-b88b-15684de269b4", error }, `Failed to ban user ${id}:`);
+            logger.error(error, `6591cdd0-b114-44c9-b88b-15684de269b4 Failed to ban user ${id}:`);
             failed.push(user);
         }
     }
@@ -278,7 +278,7 @@ export async function updateDashboard(token: string | null) {
 
             pending.push(id);
         } catch {
-            await api(token, `DELETE /banshares/${id}`).catch((error) => logger.error({ location: "2d6dffae-1f39-48d5-9145-b4dc3c3c85a8", error }));
+            await api(token, `DELETE /banshares/${id}`).catch((error) => logger.error(error, "2d6dffae-1f39-48d5-9145-b4dc3c3c85a8"));
         }
 
     const data = pending.map((x) => `- ${channels.BANSHARE_LOGS.url}/${x}`).join("\n") || "No banshares are pending!";

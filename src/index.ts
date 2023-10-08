@@ -1,8 +1,8 @@
 import bearer from "@elysiajs/bearer";
 import { Elysia } from "elysia";
+import { readdir } from "node:fs/promises";
 import logger from "./lib/logger.js";
 import routes from "./lib/routes.js";
-import { readdir } from "node:fs/promises";
 
 const app = new Elysia()
     .derive(() => ({ log: logger }))
@@ -17,7 +17,27 @@ const app = new Elysia()
 
         log.info({ location: "fada92a0-b701-4491-ab62-9653cb40dc90" }, `${request.method} ${path} [${id}]`);
     })
-    .onError(({ error }) => logger.error({ location: "3bb475ab-0531-4b96-83a3-8844ef15a3bf", error }));
+
+    .onError(({ code, error, path, request, set }) => {
+        if (code !== "NOT_FOUND") logger.error(error, `1015dd13-ed4a-4722-afc5-14861d40006e Error in ${request.method} ${path}`);
+
+        switch (code) {
+            case "INTERNAL_SERVER_ERROR":
+            case "UNKNOWN":
+                set.status = 500;
+                return { message: "Unexpected internal error." };
+            case "NOT_FOUND":
+                logger.error(`9ef3c28a-781b-4752-9c9e-ed7db72317da [404] ${request.method} ${path}`);
+                set.status = 404;
+                return { message: "Route not found." };
+            case "PARSE":
+                set.status = 400;
+                return { message: "Could not parse input body." };
+            case "VALIDATION":
+                set.status = 400;
+                return { message: error.message };
+        }
+    });
 
 export type App = typeof app;
 

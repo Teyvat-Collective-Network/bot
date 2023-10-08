@@ -41,3 +41,46 @@ export type TCNGuild = {
     delegated: boolean;
     users: Record<string, { staff: boolean; roles: string[] }>;
 };
+
+export type Poll = {
+    id: number;
+    message?: string;
+    close: number;
+    closed: boolean;
+    live: boolean;
+    restricted: boolean;
+    quorum: number;
+} & (
+    | { mode: "proposal"; question: string }
+    | { mode: "induction"; preinduct: boolean; server: string }
+    | { mode: "election"; wave: number; seats: number; candidates: string[] }
+    | { mode: "selection"; question: string; min: number; max: number; options: string[] }
+);
+
+export type PollVote = {
+    poll: number;
+    user: string;
+    mode: string;
+    abstain: boolean;
+    yes: boolean;
+    verdict: string;
+    candidates: Record<string, number>;
+    selected: string[];
+};
+
+export type PollResults = {
+    mode: string;
+    abstains: number;
+    votes: number;
+    ballots: number;
+    turnout: number;
+    yes: number;
+    no: number;
+    induct: number;
+    preinduct: number;
+    reject: number;
+    extend: number;
+    winners: string[];
+    tied: string[];
+    scores: Record<string, number>;
+};

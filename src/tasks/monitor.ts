@@ -1,4 +1,3 @@
-import { User } from "discord.js";
 import api from "../lib/api.js";
 import bot, { channels, hq } from "../lib/bot.js";
 import cycle from "../lib/cycle.js";
@@ -65,7 +64,7 @@ cycle(async () => {
     let texts = ["### Server/API Issues Detected"];
 
     for (const line of alerts)
-        if (texts.at(-1)!.length + line.length + 1 <= 2000) texts[texts.length - 1] += `\n${line}`;
+        if (texts.at(-1)!.length + line.length + 3 <= 2000) texts[texts.length - 1] += `\n- ${line}`;
         else texts.push(line);
 
     for (const text of texts) await channels.OBSERVER_CHANNEL.send(text);

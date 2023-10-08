@@ -35,7 +35,7 @@ export default async function (token: string | null | undefined, route: string, 
 
     if (!req.ok) {
         const res = await req.json();
-        logger.error({ location: "bebe9b1d-8fbe-4394-8e5d-b8dbfc83f7a5", body: res }, route);
+        logger.error({ body: res }, `bebe9b1d-8fbe-4394-8e5d-b8dbfc83f7a5 ${route}`);
         throw res.message ?? JSON.stringify(res);
     }
 
