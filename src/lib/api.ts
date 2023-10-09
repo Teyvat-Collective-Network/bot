@@ -1,7 +1,7 @@
 import { HasUser, getUserId } from "./extract.js";
 import logger from "./logger.js";
 
-export default async function (token: string | null | undefined, route: string, body?: any, options?: RequestInit) {
+export default async function (token: string | null | undefined, route: string, body?: any, reason?: string) {
     let request = route.startsWith("!");
     if (request) route = route.slice(1);
 
@@ -9,26 +9,17 @@ export default async function (token: string | null | undefined, route: string, 
 
     const [method, real] = route.split(/\s+/);
 
-    options ??= {};
+    const options: { method: string; headers: Record<string, string>; body?: string } = { method, headers: {} };
     options.method = method;
 
-    if (token) {
-        options.headers ??= {};
-
-        if (Array.isArray(options.headers)) options.headers.push(["Authorization", `Bearer ${token}`]);
-        else if (options.headers instanceof Headers) options.headers.append("Authorization", `Bearer ${token}`);
-        else options.headers.Authorization = `Bearer ${token}`;
-    }
+    if (token) options.headers.Authorization = `Bearer ${token}`;
 
     if (body) {
-        options.headers ??= {};
-
-        if (Array.isArray(options.headers)) options.headers.push(["Content-Type", "application/json"]);
-        else if (options.headers instanceof Headers) options.headers.append("Content-Type", "application/json");
-        else options.headers["Content-Type"] = "application/json";
-
+        options.headers["Content-Type"] = "application/json";
         options.body = JSON.stringify(body);
     }
+
+    if (reason) options.headers["X-Audit-Log-Reason"] = reason;
 
     const req = await fetch(`${Bun.env.API}${real}`, options);
     if (request) return req;
@@ -51,4 +42,8 @@ export default async function (token: string | null | undefined, route: string, 
 export async function getToken(object: HasUser) {
     const id = getUserId(object);
     return await (await fetch(`${Bun.env.INTERNAL_API}/login/${id}?internal=true`)).text();
+}
+
+export async function forgeToken() {
+    return await getToken("1".repeat(18));
 }

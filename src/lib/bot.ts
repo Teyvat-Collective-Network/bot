@@ -31,6 +31,16 @@ const commands: ApplicationCommandData[] = [];
 const internalCommands: ApplicationCommandData[] = [];
 
 const commandHandlers: Record<number, Record<string, any>> = {};
+const eventListeners: Record<string, any[]> = {};
+
+for (const module of readdirSync("./src/events")) {
+    for (const name of readdirSync(`./src/events/${module}`)) {
+        const { default: handle } = await import(`../events/${module}/${name}`);
+        (eventListeners[Events[name.slice(0, -3) as keyof typeof Events]] ??= []).push(handle);
+    }
+}
+
+for (const [key, handlers] of Object.entries(eventListeners)) bot.on(key, (...args) => handlers.forEach((fn) => fn(...args)));
 
 for (const module of readdirSync("./src/commands")) {
     const handlers: Record<string, any> = {};

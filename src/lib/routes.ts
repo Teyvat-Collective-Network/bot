@@ -2,6 +2,7 @@ import { App } from "../index.js";
 import deletePoll from "./routes/delete-poll.js";
 import getChannelBanshareValidate from "./routes/get-channel-banshare-validate.js";
 import getInvite from "./routes/get-invite.js";
+import getRoles from "./routes/get-roles.js";
 import getUserTag from "./routes/get-user-tag.js";
 import patchBanshareSeverity from "./routes/patch-banshare-severity.js";
 import postApplication from "./routes/post-application.js";
@@ -15,12 +16,14 @@ import postBanshare from "./routes/post-banshare.js";
 import postLog from "./routes/post-log.js";
 import postOrEditPoll from "./routes/post-or-edit-poll.js";
 import postPollRemind from "./routes/post-poll-remind.js";
+import postRolesync from "./routes/post-rolesync.js";
 
 export default (app: App) =>
     app
         .use(deletePoll)
         .use(getChannelBanshareValidate)
         .use(getInvite)
+        .use(getRoles)
         .use(getUserTag)
         .use(patchBanshareSeverity)
         .use(postApplication)
@@ -33,4 +36,5 @@ export default (app: App) =>
         .use(postBanshare)
         .use(postLog)
         .use(postOrEditPoll)
-        .use(postPollRemind);
+        .use(postPollRemind)
+        .use(postRolesync);
