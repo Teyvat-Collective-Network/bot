@@ -41,7 +41,7 @@ const app = new Elysia()
 
 export type App = typeof app;
 
-app.use(routes).listen(Bun.env.PORT || 4002);
+app.use(routes).listen(Bun.env.PORT || 4003);
 
 logger.info({ location: "482b00cd-d8a1-4ecd-94b6-02f006bd66a6" }, `TCN Bot is running at ${app.server?.hostname}:${app.server?.port}`);
 

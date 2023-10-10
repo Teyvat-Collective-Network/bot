@@ -42,8 +42,8 @@ export default async function (data: { guild?: string; user?: string; entries?: 
             const staff = member.roles.cache.hasAny(...entries[id].roleToStaff);
             const userGuild = users[member.id]?.guilds[id];
 
-            if (staff !== userGuild?.staff && !userGuild?.council)
-                await invoke("9a1f8c5c-4f37-439f-a148-be998b1c786f", [`rolesync/role-to-staff/${staff ? "promote" : "demote"}`, member.id, id], () =>
+            if (staff !== !!userGuild?.staff && !userGuild?.council)
+                await invoke("9a1f8c5c-4f37-439f-a148-be998b1c786f", [`role-to-staff/${staff ? "promote" : "demote"}`, member.id, id], () =>
                     api(token, `PUT /users/${member.id}/staff/${id}`, { staff }, "rolesync: role => staff"),
                 );
         }
@@ -58,14 +58,14 @@ export default async function (data: { guild?: string; user?: string; entries?: 
                 if (!member.roles.cache.hasAll(...roles))
                     await invoke(
                         "b592aa40-88a5-498c-a352-8ff48d7d037f",
-                        ["rolesync/staff-to-role/add", member.id, id, roles.filter((x) => !member.roles.cache.has(x))],
+                        ["staff-to-role/add", member.id, id, roles.filter((x) => !member.roles.cache.has(x))],
                         () => member.roles.add(roles, "rolesync: staff => role"),
                     );
             } else {
                 if (member.roles.cache.hasAny(...roles))
                     await invoke(
                         "bdcacd76-ff25-448b-be2f-f18ee14710e0",
-                        ["rolesync/staff-to-role/remove", member.id, id, roles.filter((x) => member.roles.cache.has(x))],
+                        ["staff-to-role/remove", member.id, id, roles.filter((x) => member.roles.cache.has(x))],
                         () => member.roles.remove(roles, "rolesync: staff => role"),
                     );
             }
@@ -86,7 +86,7 @@ export default async function (data: { guild?: string; user?: string; entries?: 
             const remove = total.filter((x) => roles.includes(x) && !assign.includes(x));
 
             if (add.length + remove.length > 0)
-                await invoke("28d11549-e527-4898-9fce-53a2d50df6e4", ["rolesync/role-to-api", member.id, id, add, remove], () =>
+                await invoke("28d11549-e527-4898-9fce-53a2d50df6e4", ["role-to-api", member.id, id, add, remove], () =>
                     api(token, `PATCH /users/${member.id}/guild-roles/${id}`, { add, remove }),
                 );
         }
@@ -110,9 +110,14 @@ export default async function (data: { guild?: string; user?: string; entries?: 
                 if (add.length + remove.length > 0) {
                     const set = [...member.roles.cache.keys()].filter((x) => !remove.includes(x)).concat(...add);
 
-                    await invoke("29284edd-42b7-4cbf-a2a1-863940fac884", ["rolesync/api-to-role", member.id, id, add, remove], () => member.roles.set(set));
+                    await invoke("29284edd-42b7-4cbf-a2a1-863940fac884", ["api-to-role", member.id, id, add, remove], () => member.roles.set(set));
                 }
             }
 
-    if (logs.length > 0) fetch(`${Bun.env.INTERNAL_API}/push`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(logs) });
+    if (logs.length > 0)
+        await fetch(`${Bun.env.INTERNAL_API}/push`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ topic: "rolesync", messages: logs }),
+        });
 }
