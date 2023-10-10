@@ -7,6 +7,16 @@ export default (app: App) =>
     app.post(
         "/poll-remind/:id",
         async ({ body: { message, waiting }, params: { id } }) => {
+            try {
+                if (!(await channels.VOTE_HERE.messages.fetch({ message, force: true }))) throw 0;
+            } catch {
+                await channels.OBSERVER_CHANNEL.send(
+                    `DM reminders were skipped for [poll #${id}](${Bun.env.WEBSITE}/vote/edit/${id}) because the message could not be fetched. If this poll was intentionally deleted, please delete it in the voting center. If not, please re-post it as required.`,
+                );
+
+                return;
+            }
+
             const failed: string[] = [];
             const url = `<${channels.VOTE_HERE.url}/${message}>`;
 
