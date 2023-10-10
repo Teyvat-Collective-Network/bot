@@ -7,7 +7,7 @@ export default (app: App) =>
     app.get(
         "/channels/:id/banshare-valid/:guild",
         async ({ params: { id, guild } }) => {
-            const channel = await bot.channels.fetch(id).catch(() => {});
+            const channel = await bot.channels.fetch(id).catch();
             if (!channel) return { error: `No channel exists with ID ${id}.` };
 
             return {

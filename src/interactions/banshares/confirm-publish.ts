@@ -16,10 +16,10 @@ export default async function (button: ButtonInteraction, message: string) {
             allowedMentions: { users: [button.user.id] },
         });
 
-        await button.editReply(failure(message)).catch(() => {});
+        await button.editReply(failure(message)).catch();
 
         return;
     }
 
-    await button.editReply(success("The banshare has been published successfully.")).catch(() => {});
+    await button.editReply(success("The banshare has been published successfully.")).catch();
 }

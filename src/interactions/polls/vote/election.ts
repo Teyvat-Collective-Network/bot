@@ -6,7 +6,7 @@ import { Poll, PollVote } from "../../../lib/types.js";
 export default async function (button: ButtonInteraction, id: string) {
     const [poll, vote]: [Poll, PollVote] = await Promise.all([
         api(await getToken(button), `GET /polls/${id}`),
-        api(await getToken(button), `GET /polls/${id}/vote`).catch(() => {}),
+        api(await getToken(button), `GET /polls/${id}/vote`).catch(),
     ]);
 
     if (poll.mode !== "election") throw "?";

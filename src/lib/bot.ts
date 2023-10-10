@@ -20,7 +20,11 @@ import logger from "./logger.js";
 import { failure, success } from "./responses.js";
 import { reply } from "./utils.js";
 
-const bot = new Client({ allowedMentions: { parse: [] }, intents: IntentsBitField.Flags.Guilds | IntentsBitField.Flags.GuildMembers });
+const bot = new Client({
+    allowedMentions: { parse: [] },
+    intents: IntentsBitField.Flags.Guilds | IntentsBitField.Flags.GuildMembers | IntentsBitField.Flags.GuildInvites,
+});
+
 await bot.login(Bun.env.DISCORD_TOKEN);
 
 await new Promise((r) => bot.on(Events.ClientReady, r));
@@ -37,6 +41,8 @@ for (const module of readdirSync("./src/events")) {
     for (const name of readdirSync(`./src/events/${module}`)) {
         const { default: handle } = await import(`../events/${module}/${name}`);
         (eventListeners[Events[name.slice(0, -3) as keyof typeof Events]] ??= []).push(handle);
+
+        logger.debug(`Loaded event ${name.slice(0, -3)} of module ${module}.`);
     }
 }
 
@@ -95,7 +101,7 @@ for (const module of readdirSync("./src/commands")) {
         ],
     };
 
-    if (["internals"].includes(module)) internalCommands.push(data);
+    if (["hq"].includes(module)) internalCommands.push(data);
     else commands.push(data);
 
     (commandHandlers[ApplicationCommandType.ChatInput] ??= {})[module] = {
@@ -268,4 +274,5 @@ export const channels = {
     BANSHARE_LOGS: await get<TextChannel>(Bun.env.BANSHARE_LOGS!),
     BOT_LOGS: await get<TextChannel>(Bun.env.BOT_LOGS!),
     VOTE_HERE: await get<TextChannel>(Bun.env.VOTE_HERE!),
+    INFO_AND_RULES: await get<TextChannel>(Bun.env.INFO_AND_RULES!),
 };

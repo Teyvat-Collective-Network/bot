@@ -17,16 +17,16 @@ export default async function (button: ButtonInteraction, banshare: string) {
 
     if (!req.ok) {
         const { message, code } = await req.json();
-        await button.editReply(failure(message)).catch(() => {});
+        await button.editReply(failure(message)).catch();
 
         if (code === 305) {
             // ban button feature disabled; delete the button
-            const ref = await button.message.fetchReference().catch(() => {});
-            await ref?.edit({ components: crosspostComponents(ref.id) }).catch(() => {});
+            const ref = await button.message.fetchReference().catch();
+            await ref?.edit({ components: crosspostComponents(ref.id) }).catch();
         }
 
         return;
     }
 
-    await button.editReply(success("The banshare has been executed successfully.")).catch(() => {});
+    await button.editReply(success("The banshare has been executed successfully.")).catch();
 }
