@@ -1,6 +1,4 @@
 {
-    "name": "bot",
-    "version": "1.0.50",
     "scripts": {
         "dev": "bun run src/index.ts | pino-pretty -i hostname,pid"
     },
@@ -14,6 +12,5 @@
     },
     "devDependencies": {
         "bun-types": "latest"
-    },
-    "module": "src/index.js"
+    }
 }
