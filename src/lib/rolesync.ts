@@ -99,8 +99,10 @@ export default async function (data: { guild?: string; user?: string; entries?: 
 
                 const userRoles = new Set([...users[member.id].roles, ...(users[member.id].guilds[id]?.roles ?? [])]);
 
-                for (const [source, roles] of Object.entries(entries[id].apiToRole)) {
-                    if (userRoles.has(source)) assign = assign.concat(...roles);
+                for (const { type, value, guild, roles } of entries[id].apiToRole) {
+                    const obj = guild ? users[member.id].guilds[guild] : users[member.id];
+
+                    if (type === "position" ? (obj as any)[value] : obj.roles.includes(value)) assign = assign.concat(...roles);
                     else total = total.concat(...roles);
                 }
 

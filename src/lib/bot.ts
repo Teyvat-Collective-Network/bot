@@ -32,7 +32,8 @@ await new Promise((r) => bot.on(Events.ClientReady, r));
 const handlerCache: Record<string, any> = {};
 
 const commands: ApplicationCommandData[] = [];
-const internalCommands: ApplicationCommandData[] = [];
+const hqCommands: ApplicationCommandData[] = [];
+const hubCommands: ApplicationCommandData[] = [];
 
 const commandHandlers: Record<number, Record<string, any>> = {};
 const eventListeners: Record<string, any[]> = {};
@@ -101,7 +102,8 @@ for (const module of readdirSync("./src/commands")) {
         ],
     };
 
-    if (["hq"].includes(module)) internalCommands.push(data);
+    if (["hq"].includes(module)) hqCommands.push(data);
+    else if (["hub"].includes(module)) hubCommands.push(data);
     else commands.push(data);
 
     (commandHandlers[ApplicationCommandType.ChatInput] ??= {})[module] = {
@@ -121,9 +123,11 @@ for (const module of readdirSync("./src/commands")) {
 }
 
 export const hq = await bot.guilds.fetch(Bun.env.HQ!);
+export const hub = await bot.guilds.fetch(Bun.env.HUB!);
 
 await bot.application!.commands.set(commands);
-await hq.commands.set(internalCommands);
+await hq.commands.set(hqCommands);
+await hub.commands.set(hubCommands);
 
 bot.on(Events.InteractionCreate, async (interaction) => {
     try {
