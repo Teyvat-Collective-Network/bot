@@ -4,7 +4,8 @@ import { ensureObserver } from "../../lib/permissions.js";
 import { CommandData } from "../../lib/types.js";
 
 export const command: CommandData = {
-    key: "election",
+    group: "election",
+    key: "start",
     description: "start an election",
     options: [
         {
