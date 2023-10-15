@@ -4,12 +4,12 @@ import rolesync from "../../lib/rolesync.js";
 import { CommandData } from "../../lib/types.js";
 
 export const command: CommandData = {
-    key: "user",
+    key: "all",
     description: "invoke automatic role synchronization on all users",
 };
 
 export default async function (cmd: ChatInputCommandInteraction) {
     await cmd.reply(success("Updating all users..."));
     const length = await rolesync({});
-    await cmd.editReply(success(`Updated all users (made ${length} update${length === 1 ? "" : "s"}!`));
+    await cmd.editReply(success(`Updated all users (made ${length} update${length === 1 ? "" : "s"})!`));
 }

@@ -18,6 +18,6 @@ export const command: CommandData = {
 
 export default async function (cmd: ChatInputCommandInteraction, user: User) {
     await cmd.reply(success(`Updating ${user}...`));
-    await rolesync({ user: user.id });
-    await cmd.editReply(success(`Updated ${user}!`));
+    const length = await rolesync({ user: user.id });
+    await cmd.editReply(success(`Updated ${user} (made ${length} update${length === 1 ? "" : "s"})!`));
 }
