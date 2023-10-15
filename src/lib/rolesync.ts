@@ -122,4 +122,6 @@ export default async function (data: { guild?: string; user?: string; entries?: 
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ topic: "rolesync", messages: logs }),
         });
+
+    return logs.length;
 }
