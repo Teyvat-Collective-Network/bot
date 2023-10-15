@@ -13,6 +13,7 @@ import {
     Events,
     ForumChannel,
     IntentsBitField,
+    PublicThreadChannel,
     TextChannel,
 } from "discord.js";
 import { readdirSync } from "node:fs";
@@ -279,4 +280,6 @@ export const channels = {
     BOT_LOGS: await get<TextChannel>(Bun.env.BOT_LOGS!),
     VOTE_HERE: await get<TextChannel>(Bun.env.VOTE_HERE!),
     INFO_AND_RULES: await get<TextChannel>(Bun.env.INFO_AND_RULES!),
+    ELECTIONS: await get<ForumChannel>(Bun.env.ELECTIONS!),
+    ELECTION_DISCUSSIONS: await get<PublicThreadChannel>(Bun.env.ELECTION_DISCUSSIONS!),
 };
