@@ -1,16 +1,17 @@
 {
-    "scripts": {
-        "dev": "bun run src/index.ts | pino-pretty -i hostname,pid"
-    },
-    "dependencies": {
-        "@elysiajs/bearer": "^0.7.0",
-        "discord.js": "^14.13.0",
-        "elysia": "latest",
-        "octokit": "^3.1.1",
-        "pino": "^8.15.1",
-        "pino-pretty": "^10.2.0"
-    },
-    "devDependencies": {
-        "bun-types": "latest"
-    }
+  "scripts": {
+    "dev": "bun run src/index.ts | pino-pretty -i hostname,pid"
+  },
+  "dependencies": {
+    "@elysiajs/bearer": "^0.7.0",
+    "@teyvat-collective-network/toml-discord-embeds": "^1.0.0",
+    "discord.js": "^14.13.0",
+    "elysia": "latest",
+    "octokit": "^3.1.1",
+    "pino": "^8.15.1",
+    "pino-pretty": "^10.2.0"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  }
 }

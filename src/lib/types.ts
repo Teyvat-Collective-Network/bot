@@ -42,6 +42,20 @@ export type TCNGuild = {
     users: Record<string, { staff: boolean; roles: string[] }>;
 };
 
+export type Character = {
+    id: string;
+    name: string;
+    short: string;
+    attributes: Record<string, string>;
+};
+
+export type Attribute = {
+    type: string;
+    id: string;
+    name: string;
+    emoji: string;
+};
+
 export type Poll = {
     id: number;
     message?: string;
@@ -90,4 +104,13 @@ export type Rolesync = {
     staffToRole: string[];
     roleToApi: Record<string, string[]>;
     apiToRole: { type: "position" | "role"; value: string; guild?: string; roles: string[] }[];
+};
+
+export type Autosync = {
+    guild: string;
+    template: string;
+    channel: string | null;
+    webhook: string | null;
+    message: string | null;
+    repost: boolean;
 };

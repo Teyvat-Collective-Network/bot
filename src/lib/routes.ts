@@ -6,6 +6,7 @@ import getRoles from "./routes/get-roles.js";
 import getUserTag from "./routes/get-user-tag.js";
 import patchBanshareSeverity from "./routes/patch-banshare-severity.js";
 import postApplication from "./routes/post-application.js";
+import postAutosync from "./routes/post-autosync.js";
 import postBanshareExecute from "./routes/post-banshare-execute.js";
 import postBansharePublish from "./routes/post-banshare-publish.js";
 import postBanshareReject from "./routes/post-banshare-reject.js";
@@ -27,6 +28,7 @@ export default (app: App) =>
         .use(getUserTag)
         .use(patchBanshareSeverity)
         .use(postApplication)
+        .use(postAutosync)
         .use(postBanshareExecute)
         .use(postBansharePublish)
         .use(postBanshareReject)
