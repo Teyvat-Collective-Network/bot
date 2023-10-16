@@ -52,9 +52,10 @@ export default (app: App) =>
                 ],
             });
 
-            await channels.OFFICIAL_BUSINESS.send(
-                `<@&${Bun.env.NEW_APPLICANT_ALERT_ROLE}> **${submitter}** applied for **${display}**. Please check out the application in ${channels.APPLICANTS_FORUM} here: ${thread.url}`,
-            );
+            await channels.OFFICIAL_BUSINESS.send({
+                content: `<@&${Bun.env.NEW_APPLICANT_ALERT_ROLE}> **${submitter}** applied for **${display}**. Please check out the application in ${channels.APPLICANTS_FORUM} here: ${thread.url}`,
+                allowedMentions: { roles: [Bun.env.NEW_APPLICANT_ALERT_ROLE!] },
+            });
         },
         {
             body: t.Object({
