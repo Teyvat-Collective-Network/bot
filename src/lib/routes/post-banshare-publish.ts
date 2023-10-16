@@ -92,7 +92,7 @@ export default (app: App) =>
                     } catch (error) {
                         if (typeof error !== "string") log.error(error, "b3aaa4b3-e724-4f0f-ba42-c50e1711b36e");
 
-                        const obj = await api(bearer, `GET /guilds/${guild}`).catch();
+                        const obj = await api(bearer, `GET /guilds/${guild}`).catch(() => {});
 
                         await channels.BOT_LOGS.send(
                             `Failed to publish ${message.url} to <#${channelId}> in [\`${obj?.name ?? guild}\`](<https://discord.com/channels/${guild}>): ${

@@ -13,13 +13,13 @@ export default (app: App) =>
             const settings = await api(bearer, `GET /banshares/settings/${guildId}`);
             const { channel: channelId, message: messageId } = await api(bearer, `GET /banshares/${id}/crossposts/${guildId}`);
 
-            const guild = await bot.guilds.fetch(guildId).catch();
+            const guild = await bot.guilds.fetch(guildId).catch(() => {});
             if (!guild) return new Response(JSON.stringify(`No guild found with ID ${guild}.`), { status: 404 });
 
-            const crosspostChannel = await bot.channels.fetch(channelId).catch();
+            const crosspostChannel = await bot.channels.fetch(channelId).catch(() => {});
             if (!crosspostChannel?.isTextBased()) return new Response(JSON.stringify("Could not fetch crosspost channel or its type is invalid."));
 
-            const crosspost = await crosspostChannel.messages.fetch(messageId).catch();
+            const crosspost = await crosspostChannel.messages.fetch(messageId).catch(() => {});
             if (!crosspost) return new Response(JSON.stringify("Could not fetch crosspost."));
 
             const users: Record<string, User | null> = {};

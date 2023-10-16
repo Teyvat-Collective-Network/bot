@@ -32,14 +32,14 @@ export default (app: App) =>
                     const crosspost = crossposts[guild];
                     if (!crosspost) return;
 
-                    const channel = await bot.channels.fetch(channelId).catch();
+                    const channel = await bot.channels.fetch(channelId).catch(() => {});
                     if (!channel?.isTextBased()) return;
 
                     const alert = await channel
                         .send(
                             `https://discord.com/channels/${guild}/${crosspost.channel}/${crosspost.message} was rescinded by an observer. The following explanation was given:\n\n>>> ${explanation}`,
                         )
-                        .catch();
+                        .catch(() => {});
 
                     if (!alert) return;
 

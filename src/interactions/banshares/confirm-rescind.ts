@@ -16,10 +16,10 @@ export default async function (modal: ModalMessageModalSubmitInteraction, messag
             allowedMentions: { users: [modal.user.id] },
         });
 
-        await modal.editReply(failure(message)).catch();
+        await modal.editReply(failure(message)).catch(() => {});
 
         return;
     }
 
-    await modal.editReply(success("The banshare has been rescinded successfully.")).catch();
+    await modal.editReply(success("The banshare has been rescinded successfully.")).catch(() => {});
 }

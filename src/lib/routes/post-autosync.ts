@@ -168,7 +168,7 @@ async function autosync(configs: Autosync[]) {
                 const channel = await bot.channels.fetch(config.channel);
                 if (channel?.type !== ChannelType.GuildText) throw `The channel type of ${channel} is invalid (required: guild text channel).`;
 
-                let message = config.message === null ? null : await channel.messages.fetch(config.message).catch();
+                let message = config.message === null ? null : await channel.messages.fetch(config.message).catch(() => {});
 
                 if (message && !config.repost) {
                     await message.edit({ ...post, flags: undefined });
@@ -176,13 +176,13 @@ async function autosync(configs: Autosync[]) {
                 }
 
                 const { id } = await channel.send(post);
-                await message?.delete()?.catch();
+                await message?.delete()?.catch(() => {});
 
                 await api(await forgeToken(), `PATCH /autosync/${config.guild}`, { message: id });
             }
         } catch (error: any) {
             logger.error(error, `b1119732-22cb-4132-8937-1946d01b1bf7 Error in autosync for ${config.guild}`);
-            await channels.BOT_LOGS.send(`Error in autosync for ${config.guild}: ${error.message ?? error}`).catch();
+            await channels.BOT_LOGS.send(`Error in autosync for ${config.guild}: ${error.message ?? error}`).catch(() => {});
         }
     }
 }
