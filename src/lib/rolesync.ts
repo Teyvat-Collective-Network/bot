@@ -22,7 +22,14 @@ export default async function (data: { guild?: string; user?: string; entries?: 
     };
 
     const entries = Object.fromEntries(_entries.map((entry) => [entry.guild, entry]));
-    const _guilds = (await Promise.all(_entries.map(({ guild }) => bot.guilds.fetch(guild).catch(() => {})).filter((x) => x))) as Guild[];
+
+    const _guilds = (await Promise.all(
+        _entries
+            .filter(({ guild }) => guild)
+            .map(({ guild }) => bot.guilds.fetch(guild).catch(() => {}))
+            .filter((x) => x),
+    )) as Guild[];
+
     const guilds = Object.fromEntries(_guilds.map((x) => [x.id, x]));
 
     const memberMap: Record<string, GuildMember[]> = {};
