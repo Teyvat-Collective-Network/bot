@@ -1,7 +1,7 @@
 import { ChannelType, PermissionFlagsBits, User } from "discord.js";
 import { t } from "elysia";
 import { App } from "../../index.js";
-import api from "../api.js";
+import api, { forgeToken } from "../api.js";
 import { banButton, components, crosspostComponents, execute, updateDashboard } from "../banshares.js";
 import bot, { channels } from "../bot.js";
 import { greyButton } from "../responses.js";
@@ -87,7 +87,7 @@ export default (app: App) =>
                             return;
                         }
 
-                        await api(bearer, `POST /banshares/${id}/execute/${guild}?auto=true`);
+                        await api(await forgeToken(), `POST /banshares/${id}/execute/${guild}?auto=true`);
                         await execute(channel.guild, logs, id, daedalus, crosspost, reason, users);
                     } catch (error) {
                         if (typeof error !== "string") log.error(error, "b3aaa4b3-e724-4f0f-ba42-c50e1711b36e");
