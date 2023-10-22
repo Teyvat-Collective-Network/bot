@@ -1,3 +1,4 @@
+import { parse } from "@iarna/toml";
 import TDE from "@teyvat-collective-network/toml-discord-embeds";
 import { ChannelType } from "discord.js";
 import { t } from "elysia";
@@ -140,7 +141,7 @@ async function autosync(configs: Autosync[]) {
         };
 
         try {
-            const post = TDE.parse(config.template, sources);
+            const post = TDE.convert(parse(config.template), sources);
 
             if (config.webhook) {
                 if (!config.repost && config.message) {
