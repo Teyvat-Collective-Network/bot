@@ -4,12 +4,17 @@ import bot from "./bot.js";
 import logger from "./logger.js";
 import { Rolesync, TCNUser } from "./types.js";
 
-export default async function (data: { guild?: string; user?: string; entries?: (Rolesync & { guild: string })[] }) {
+let lastUpdated = 0;
+let requests = 0;
+
+export default function () {
+    requests = 1;
+}
+
+async function run() {
     const logs: any[][] = [];
 
-    const _entries: (Rolesync & { guild: string })[] = data.guild
-        ? [await api(await forgeToken(), `GET /guilds/${data.guild}/rolesync`)]
-        : await api(await forgeToken(), `GET /guilds/all-rolesync`);
+    const _entries: (Rolesync & { guild: string })[] = await api(await forgeToken(), `GET /guilds/all-rolesync`);
 
     const invoke = async (location: string, output: any[], fn: () => any) => {
         try {
@@ -29,16 +34,9 @@ export default async function (data: { guild?: string; user?: string; entries?: 
     const guilds = Object.fromEntries(_guilds.map((x) => [x.id, x]));
 
     const memberMap: Record<string, GuildMember[]> = {};
-    for (const [id, guild] of Object.entries(guilds))
-        if (data.user)
-            try {
-                memberMap[id] = [await guild.members.fetch(data.user)];
-            } catch {}
-        else memberMap[id] = [...(await guild.members.fetch()).values()];
+    for (const [id, guild] of Object.entries(guilds)) memberMap[id] = [...(await guild.members.fetch()).values()];
 
-    const users = Object.fromEntries(
-        ((data.user ? [await api(null, `GET /users/${data.user}`)] : await api(null, `GET /users`)) as TCNUser[]).map((x) => [x.id, x]),
-    );
+    const users = Object.fromEntries(((await api(null, `GET /users`)) as TCNUser[]).map((x) => [x.id, x]));
 
     for (const [id, members] of Object.entries(memberMap))
         for (const member of members) {
@@ -127,3 +125,14 @@ export default async function (data: { guild?: string; user?: string; entries?: 
 
     return logs.length;
 }
+
+async function loop() {
+    if (Date.now() - lastUpdated > 30 * 60 * 1000 || requests > 0) {
+        requests = 0;
+        await run().catch(() => {});
+    }
+
+    setTimeout(loop, 10000);
+}
+
+loop();
