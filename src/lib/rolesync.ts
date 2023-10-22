@@ -5,12 +5,11 @@ import logger from "./logger.js";
 import { Rolesync, TCNUser } from "./types.js";
 
 export default async function (data: { guild?: string; user?: string; entries?: (Rolesync & { guild: string })[] }) {
-    const token = await forgeToken();
     const logs: any[][] = [];
 
     const _entries: (Rolesync & { guild: string })[] = data.guild
-        ? [await api(token, `GET /guilds/${data.guild}/rolesync`)]
-        : await api(token, `GET /guilds/all-rolesync`);
+        ? [await api(await forgeToken(), `GET /guilds/${data.guild}/rolesync`)]
+        : await api(await forgeToken(), `GET /guilds/all-rolesync`);
 
     const invoke = async (location: string, output: any[], fn: () => any) => {
         try {
@@ -47,8 +46,8 @@ export default async function (data: { guild?: string; user?: string; entries?: 
             const userGuild = users[member.id]?.guilds[id];
 
             if (staff !== !!userGuild?.staff && !userGuild?.council)
-                await invoke("9a1f8c5c-4f37-439f-a148-be998b1c786f", [`role-to-staff/${staff ? "promote" : "demote"}`, member.id, id], () =>
-                    api(token, `PUT /users/${member.id}/staff/${id}`, { staff }, "rolesync: role => staff"),
+                await invoke("9a1f8c5c-4f37-439f-a148-be998b1c786f", [`role-to-staff/${staff ? "promote" : "demote"}`, member.id, id], async () =>
+                    api(await forgeToken(), `PUT /users/${member.id}/staff/${id}`, { staff }, "rolesync: role => staff"),
                 );
         }
 
@@ -90,8 +89,8 @@ export default async function (data: { guild?: string; user?: string; entries?: 
             const remove = total.filter((x) => roles.includes(x) && !assign.includes(x));
 
             if (add.length + remove.length > 0)
-                await invoke("28d11549-e527-4898-9fce-53a2d50df6e4", ["role-to-api", member.id, id, add, remove], () =>
-                    api(token, `PATCH /users/${member.id}/guild-roles/${id}`, { add, remove }),
+                await invoke("28d11549-e527-4898-9fce-53a2d50df6e4", ["role-to-api", member.id, id, add, remove], async () =>
+                    api(await forgeToken(), `PATCH /users/${member.id}/guild-roles/${id}`, { add, remove }),
                 );
         }
 
