@@ -35,7 +35,7 @@ export default async function (cmd: ChatInputCommandInteraction) {
             })),
         });
 
-    await cmd.channel!.send(`**Autosync Guide: ${Bun.env.WEBSITE}/info/partner-list#autosync`);
+    await cmd.channel!.send(`**Autosync Guide**: ${Bun.env.WEBSITE}/info/partner-list#autosync`);
 
     return "The long-form partner list has been generated.";
 }
