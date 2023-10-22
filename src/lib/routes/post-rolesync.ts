@@ -18,7 +18,7 @@ export default (app: App) =>
                         roleToStaff: t.Array(t.String()),
                         staffToRole: t.Array(t.String()),
                         roleToApi: t.Object({}, { additionalProperties: t.Array(t.String()) }),
-                        apiToRole: t.Array(t.Object({ type: t.String(), value: t.String(), guild: t.Optional(t.String()), roles: t.Array(t.String()) })),
+                        apiToRole: t.Array(t.Object({ type: t.String(), value: t.String(), guild: t.Nullable(t.String()), roles: t.Array(t.String()) })),
                     }),
                 ),
             }),
