@@ -24,7 +24,7 @@ export default async function (cmd: ChatInputCommandInteraction) {
             embeds: guilds.splice(0, 10).map((guild) => ({
                 title: guild.name,
                 description: `${["element", "weapon", "region"]
-                    .map((x) => attributes[x][characters[guild.mascot].attributes[x] ?? ""])
+                    .map((x) => attributes[x][characters[guild.mascot].attributes[x] ?? ""]?.emoji)
                     .filter((x) => x)
                     .join(" ")} ${characters[guild.mascot].name}${
                     characters[guild.mascot].short ? ` (${characters[guild.mascot].short})` : ""
