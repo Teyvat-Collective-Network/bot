@@ -31,6 +31,7 @@ export default async function (cmd: ChatInputCommandInteraction) {
                 }\n\n**Owner:** <@${guild.owner}>${guild.advisor ? `\n**Advisor**: <@${guild.advisor}>` : ""}`,
                 color: 0x2b2d31,
                 thumbnail: { url: `${Bun.env.WEBSITE}/files/${guild.mascot}.png` },
+                image: { url: "https://i.imgur.com/U9Wqlug.png" },
                 footer: { text: guild.id },
             })),
         });
