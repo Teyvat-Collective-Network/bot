@@ -24,7 +24,7 @@ async function autosync(configs: Autosync[]) {
 
     const names: Record<string, string> = {};
 
-    for (const guild of guilds) names[guild.id] = second.has(guild.mascot) ? guild.name : characters[guild.mascot].name;
+    for (const guild of guilds) names[guild.id] = second.has(guild.mascot) ? guild.name : characters[guild.mascot].short ?? characters[guild.mascot].name;
 
     for (const config of configs) {
         if (!config.channel && !config.webhook) continue;
