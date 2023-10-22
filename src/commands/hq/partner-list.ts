@@ -15,7 +15,7 @@ export default async function (cmd: ChatInputCommandInteraction) {
 
     const token = await getToken(cmd);
 
-    const guilds: TCNGuild[] = await api(token, `GET /guilds`);
+    const guilds: TCNGuild[] = (await api(token, `GET /guilds`)).sort((x: TCNGuild, y: TCNGuild) => x.name.localeCompare(y.name));
     const characters: Record<string, Character> = Object.fromEntries((await api(token, `GET /characters`)).map((x: Character) => [x.id, x]));
     const attributes: Record<string, Record<string, Attribute>> = await api(token, `GET /attributes`);
 
