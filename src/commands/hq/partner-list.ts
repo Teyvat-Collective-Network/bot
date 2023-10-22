@@ -11,7 +11,6 @@ export const command: CommandData = {
 
 export default async function (cmd: ChatInputCommandInteraction) {
     await cmd.reply(success("Generating, please be patient..."));
-    await cmd.deferReply({ ephemeral: true });
     await ensureObserver(cmd);
 
     const token = await getToken(cmd);
