@@ -58,13 +58,14 @@ export default (app: App) =>
             try {
                 const post = await channels.BANSHARE_LOGS.send({ ...sendData, components: components(false, severity) });
 
-                channels.OBSERVER_CHANNEL.send(
-                    `<@&${urgent ? Bun.env.URGENT_BANSHARE_PING_ROLE : Bun.env.NON_URGENT_BANSHARE_PING_ROLE}> A banshare was just posted in ${
+                channels.OBSERVER_CHANNEL.send({
+                    content: `<@&${urgent ? Bun.env.URGENT_BANSHARE_PING_ROLE : Bun.env.NON_URGENT_BANSHARE_PING_ROLE}> A banshare was just posted in ${
                         channels.BANSHARE_LOGS
                     } for review${
                         urgent ? " (**urgent**)" : ""
                     }. If you wish to alter the severity, do so with the buttons below the banshare **before** publishing.`,
-                );
+                    allowedMentions: { roles: [urgent ? Bun.env.URGENT_BANSHARE_PING_ROLE! : Bun.env.NON_URGENT_BANSHARE_PING_ROLE!] },
+                });
 
                 updateDashboard(bearer!);
 
