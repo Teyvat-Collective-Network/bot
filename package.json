@@ -6,7 +6,7 @@
   "dependencies": {
     "@elysiajs/bearer": "^0.7.0",
     "@iarna/toml": "^2.2.5",
-    "@teyvat-collective-network/toml-discord-embeds": "latest",
+    "@teyvat-collective-network/toml-discord-embeds": "1.0.4",
     "discord.js": "^14.13.0",
     "elysia": "latest",
     "octokit": "^3.1.1",
