@@ -5,9 +5,8 @@ import logger from "./lib/logger.js";
 import routes from "./lib/routes.js";
 
 const app = new Elysia()
-    .derive(() => ({ log: logger }))
     .use(bearer())
-    .onBeforeHandle(({ bearer, log, path, request }) => {
+    .onBeforeHandle(({ bearer, path, request }) => {
         let id = "anon";
 
         if (bearer) {
@@ -15,7 +14,7 @@ const app = new Elysia()
             id = JSON.parse(Buffer.from(payload, "base64url").toString("utf-8")).id;
         }
 
-        log.info({ location: "fada92a0-b701-4491-ab62-9653cb40dc90" }, `${request.method} ${path} [${id}]`);
+        logger.info({ location: "fada92a0-b701-4491-ab62-9653cb40dc90" }, `${request.method} ${path} [${id}]`);
     })
 
     .onError(({ code, error, path, request, set }) => {

@@ -5,11 +5,12 @@ import { App } from "../../index.js";
 import { compare, components, severities, updateDashboard } from "../banshares.js";
 import bot, { channels } from "../bot.js";
 import { createGist } from "../gists.js";
+import logger from "../logger.js";
 
 export default (app: App) =>
     app.post(
         "/banshares",
-        async ({ bearer, body: { author, ids, idList, reason, evidence, severity, urgent, skipValidation, serverName }, log }) => {
+        async ({ bearer, body: { author, ids, idList, reason, evidence, severity, urgent, skipValidation, serverName } }) => {
             const tags: string[] = [];
 
             if (!skipValidation) {
@@ -71,7 +72,7 @@ export default (app: App) =>
 
                 return { message: post.id };
             } catch (error) {
-                log.error(error, "5ccc5b4d-71cf-46a4-bf78-c88cc5f10a9e");
+                logger.error(error, "5ccc5b4d-71cf-46a4-bf78-c88cc5f10a9e");
                 return new Response('{"message":null}', { status: 500 });
             }
         },

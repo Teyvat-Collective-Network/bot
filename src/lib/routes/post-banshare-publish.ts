@@ -5,11 +5,12 @@ import api, { forgeToken } from "../api.js";
 import { banButton, components, crosspostComponents, execute, updateDashboard } from "../banshares.js";
 import bot, { channels } from "../bot.js";
 import { greyButton } from "../responses.js";
+import logger from "../logger.js";
 
 export default (app: App) =>
     app.post(
         "/banshares/:message/publish",
-        async ({ bearer, log, params: { message: id } }) => {
+        async ({ bearer, params: { message: id } }) => {
             const { idList, reason, severity, publisher }: { idList: string[]; reason: string; severity: string; publisher: string } = await api(
                 bearer,
                 `GET /banshares/${id}`,
@@ -90,7 +91,7 @@ export default (app: App) =>
                         await api(await forgeToken(), `POST /banshares/${id}/execute/${guild}?auto=true`);
                         await execute(channel.guild, logs, id, daedalus, crosspost, reason, users);
                     } catch (error) {
-                        if (typeof error !== "string") log.error(error, "b3aaa4b3-e724-4f0f-ba42-c50e1711b36e");
+                        if (typeof error !== "string") logger.error(error, "b3aaa4b3-e724-4f0f-ba42-c50e1711b36e");
 
                         const obj = await api(bearer, `GET /guilds/${guild}`).catch(() => {});
 
@@ -98,7 +99,7 @@ export default (app: App) =>
                             `Failed to publish ${message.url} to <#${channelId}> in [\`${obj?.name ?? guild}\`](<https://discord.com/channels/${guild}>): ${
                                 typeof error === "string" ? error : "(unknown, check console)"
                             }`,
-                        ).catch((error) => log.error(error, "3e769ffc-1760-489a-b8a5-0f8dece9eaec"));
+                        ).catch((error) => logger.error(error, "3e769ffc-1760-489a-b8a5-0f8dece9eaec"));
                     }
                 }),
             );
