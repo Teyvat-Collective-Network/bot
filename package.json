@@ -11,7 +11,8 @@
     "elysia": "latest",
     "octokit": "^3.1.1",
     "pino": "^8.15.1",
-    "pino-pretty": "^10.2.0"
+    "pino-pretty": "^10.2.0",
+    "shlex": "^2.1.2"
   },
   "devDependencies": {
     "bun-types": "latest"

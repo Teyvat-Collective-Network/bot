@@ -39,9 +39,9 @@ export default async function (token: string | null | undefined, route: string, 
     }
 }
 
-export async function getToken(object: HasUser) {
+export async function getToken(object: HasUser, internal?: boolean) {
     const id = getUserId(object);
-    return await (await fetch(`${Bun.env.INTERNAL_API}/login/${id}?internal=true`)).text();
+    return await (await fetch(`${Bun.env.INTERNAL_API}/login/${id}?internal=${internal ?? true}`)).text();
 }
 
 export async function forgeToken() {

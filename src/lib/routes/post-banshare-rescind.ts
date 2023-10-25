@@ -9,7 +9,7 @@ export default (app: App) =>
     app.post(
         "/banshares/:message/rescind",
         async ({ bearer, params: { message: id } }) => {
-            const { explanation }: { rescinder: string; explanation: string } = await api(bearer, `GET /banshares/${id}`);
+            const { rescinder, explanation }: { rescinder: string; explanation: string } = await api(bearer, `GET /banshares/${id}`);
             const guilds: { guild: string; channel?: string }[] = await api(bearer, `GET /banshares/guilds`);
             const crosspostsArray: { guild: string; channel: string; message: string }[] = await api(bearer, `GET /banshares/${id}/crossposts`);
 
@@ -24,6 +24,8 @@ export default (app: App) =>
                 message = await channels.BANSHARE_LOGS.messages.fetch(id);
                 await message.edit({ components: greyButton("Rescinding...") });
             } catch {}
+
+            await channels.BOT_LOGS.send(`<@${rescinder}> rescinded ${message?.url}:\n\n>>> ${explanation}`);
 
             await Promise.all(
                 guilds.map(async ({ guild, channel: channelId }) => {

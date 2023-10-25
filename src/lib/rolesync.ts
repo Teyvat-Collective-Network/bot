@@ -129,6 +129,8 @@ async function run() {
 async function loop() {
     if (Date.now() - lastUpdated > 30 * 60 * 1000 || requests > 0) {
         requests = 0;
+        lastUpdated = Date.now();
+
         await run().catch(() => {});
     }
 

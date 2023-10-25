@@ -13,6 +13,7 @@ import {
     Events,
     ForumChannel,
     IntentsBitField,
+    Partials,
     PublicThreadChannel,
     TextChannel,
 } from "discord.js";
@@ -23,7 +24,14 @@ import { reply } from "./utils.js";
 
 const bot = new Client({
     allowedMentions: { parse: [] },
-    intents: IntentsBitField.Flags.Guilds | IntentsBitField.Flags.GuildMembers | IntentsBitField.Flags.GuildInvites,
+    intents:
+        IntentsBitField.Flags.Guilds |
+        IntentsBitField.Flags.GuildMembers |
+        IntentsBitField.Flags.GuildInvites |
+        IntentsBitField.Flags.GuildMessages |
+        IntentsBitField.Flags.DirectMessages |
+        IntentsBitField.Flags.MessageContent,
+    partials: [Partials.Channel],
 });
 
 await bot.login(Bun.env.DISCORD_TOKEN);
