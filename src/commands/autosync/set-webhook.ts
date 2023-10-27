@@ -1,6 +1,6 @@
 import { APIWebhook, ApplicationCommandOptionType, ChatInputCommandInteraction } from "discord.js";
 import api, { getToken } from "../../lib/api.js";
-import { ensureOwner } from "../../lib/permissions.js";
+import { ensureOwnerOrAdvisor } from "../../lib/permissions.js";
 import { CommandData } from "../../lib/types.js";
 
 export const command: CommandData = {
@@ -19,7 +19,7 @@ export const command: CommandData = {
 export default async function (cmd: ChatInputCommandInteraction, url: string | null) {
     await cmd.deferReply({ ephemeral: true });
 
-    await ensureOwner(cmd, cmd.guild!);
+    await ensureOwnerOrAdvisor(cmd, cmd.guild!);
 
     let webhook: APIWebhook;
 
