@@ -167,6 +167,11 @@ async function autosync(configs: Autosync[]) {
 
                 if (!req.ok) throw res;
 
+                const delreq = await fetch(`${config.webhook}/messages/${config.message}`, { method: "DELETE" }).catch(() => {});
+
+                if (!delreq?.ok)
+                    logger.error(await delreq?.json(), `db3b1c47-da09-408b-bfd9-e8ffd1ea6e18 Error deleting previous autosync for ${config.guild}`);
+
                 await api(await forgeToken(), `PATCH /autosync/${config.guild}`, { message: res.id });
             } else if (config.channel) {
                 const channel = await bot.channels.fetch(config.channel);
@@ -180,7 +185,10 @@ async function autosync(configs: Autosync[]) {
                 }
 
                 const { id } = await channel.send(post);
-                await message?.delete()?.catch(() => {});
+
+                await message
+                    ?.delete()
+                    ?.catch((error) => logger.error(error, `39f130f3-0ac2-40b5-b015-a84a3722c997 Error deleting previous autosync for ${config.guild}`));
 
                 await api(await forgeToken(), `PATCH /autosync/${config.guild}`, { message: id });
             }
