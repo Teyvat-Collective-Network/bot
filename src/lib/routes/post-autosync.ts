@@ -1,14 +1,11 @@
-import { parse } from "@iarna/toml";
-import TDE from "@teyvat-collective-network/toml-discord-embeds";
 import { ChannelType } from "discord.js";
 import { t } from "elysia";
 import { App } from "../../index.js";
 import api, { forgeToken } from "../api.js";
 import bot, { channels } from "../bot.js";
 import logger from "../logger.js";
+import { renderPartnerList } from "../partner-list.js";
 import { Attribute, Autosync, Character, TCNGuild } from "../types.js";
-
-const elements = ["pyro", "hydro", "anemo", "electro", "dendro", "cryo", "geo"];
 
 async function autosync(configs: Autosync[]) {
     const guilds: TCNGuild[] = await api(null, `GET /guilds`);
@@ -30,121 +27,8 @@ async function autosync(configs: Autosync[]) {
     for (const config of configs) {
         if (!config.channel && !config.webhook) continue;
 
-        const sortAllFns: Record<string, (x: [string, TCNGuild[]], y: [string, TCNGuild[]]) => number> = {
-            hoist(x: [string, TCNGuild[]], y: [string, TCNGuild[]]) {
-                return x[1].some((k) => k.id === config.guild) ? -1 : y[1].some((k) => k.id === config.guild) ? 1 : 0;
-            },
-            size(x: [string, TCNGuild[]], y: [string, TCNGuild[]]) {
-                return y[1].length - x[1].length;
-            },
-            "-size"(x: [string, TCNGuild[]], y: [string, TCNGuild[]]) {
-                return x[1].length - y[1].length;
-            },
-            "a-z"(x: [string, TCNGuild[]], y: [string, TCNGuild[]]) {
-                return x[0].localeCompare(y[0]);
-            },
-            "z-a"(x: [string, TCNGuild[]], y: [string, TCNGuild[]]) {
-                return y[0].localeCompare(x[0]);
-            },
-            elements(x: [string, TCNGuild[]], y: [string, TCNGuild[]]) {
-                return elements.indexOf(x[0]) - elements.indexOf(y[0]);
-            },
-        };
-
-        const sortFns: Record<string, (x: TCNGuild, y: TCNGuild) => number> = {
-            hoist(x: TCNGuild, y: TCNGuild) {
-                return x.id === config.guild ? -1 : y.id === config.guild ? 1 : 0;
-            },
-            "a-z"(x: TCNGuild, y: TCNGuild) {
-                return names[x.id].localeCompare(names[y.id]);
-            },
-            "z-a"(x: TCNGuild, y: TCNGuild) {
-                return names[y.id].localeCompare(names[x.id]);
-            },
-        };
-
-        const sources = {
-            "tcn/partners"({
-                group,
-                sortall,
-                sort,
-                key,
-                inline,
-                pad,
-                bullet,
-            }: {
-                group?: string;
-                sortall?: string;
-                sort?: string;
-                key?: string;
-                inline?: boolean;
-                pad?: boolean;
-                bullet?: string;
-            }) {
-                group ??= "element";
-                sortall ??= "size,a-z";
-                sort ??= "a-z";
-                key ??= "emoji";
-                inline ??= true;
-                pad ??= true;
-                bullet ??= "-";
-
-                if (!["emoji", "id", "name"].includes(key)) throw new Error(`Invalid key ${key}.`);
-
-                const innerSorters = sort.split(",").map((x) => {
-                    if (!(x in sortFns)) throw new Error(`Invalid sorter ${x}.`);
-                    return sortFns[x];
-                });
-
-                const outerSorters = sortall.split(",").map((x) => {
-                    if (!(x in sortAllFns)) throw new Error(`Invalid sorter ${x}.`);
-                    return sortAllFns[x];
-                });
-
-                const groups: Record<string, TCNGuild[]> = {};
-
-                for (const guild of guilds) {
-                    const mascot = characters[guild.mascot];
-                    const value = mascot.attributes[group];
-                    if (!value) throw new Error(`Invalid group ${group}: ${guild.name}'s mascot, ${mascot.name}, does not have this attribute.`);
-
-                    (groups[value] ??= []).push(guild);
-                }
-
-                for (const group of Object.values(groups)) {
-                    group.sort((x, y) => {
-                        for (const sort of innerSorters) {
-                            const c = sort(x, y);
-                            if (c) return c;
-                        }
-
-                        return 0;
-                    });
-                }
-
-                const fields = Object.entries(groups)
-                    .sort((x, y) => {
-                        for (const sort of outerSorters) {
-                            const c = sort(x, y);
-                            if (c) return c;
-                        }
-
-                        return 0;
-                    })
-                    .map(([attr, guilds]) => ({
-                        name: attributes[group!][attr][key! as "emoji" | "id" | "name"],
-                        value: guilds.map((x) => `${bullet} [${names[x.id]}](https://discord.gg/${x.invite})`).join("\n"),
-                        inline,
-                    }));
-
-                if (pad && inline) while (fields.length % 3 > 0) fields.push({ name: "_ _", value: "_ _", inline: true });
-
-                return fields;
-            },
-        };
-
         try {
-            const post = TDE.convert(parse(config.template), sources);
+            const post = await renderPartnerList(config, { attributes, characters, guilds, names });
 
             if (config.webhook) {
                 if (!config.repost && config.message) {
