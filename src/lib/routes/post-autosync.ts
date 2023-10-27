@@ -71,6 +71,7 @@ async function autosync(configs: Autosync[]) {
                 key,
                 inline,
                 pad,
+                bullet,
             }: {
                 group?: string;
                 sortall?: string;
@@ -78,6 +79,7 @@ async function autosync(configs: Autosync[]) {
                 key?: string;
                 inline?: boolean;
                 pad?: boolean;
+                bullet?: string;
             }) {
                 group ??= "element";
                 sortall ??= "size,a-z";
@@ -85,6 +87,7 @@ async function autosync(configs: Autosync[]) {
                 key ??= "emoji";
                 inline ??= true;
                 pad ??= true;
+                bullet ??= "-";
 
                 if (!["emoji", "id", "name"].includes(key)) throw new Error(`Invalid key ${key}.`);
 
@@ -130,7 +133,7 @@ async function autosync(configs: Autosync[]) {
                     })
                     .map(([attr, guilds]) => ({
                         name: attributes[group!][attr][key! as "emoji" | "id" | "name"],
-                        value: guilds.map((x) => `- [${names[x.id]}](https://discord.gg/${x.invite})`).join("\n"),
+                        value: guilds.map((x) => `${bullet} [${names[x.id]}](https://discord.gg/${x.invite})`).join("\n"),
                         inline,
                     }));
 
