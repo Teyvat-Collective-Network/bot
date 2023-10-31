@@ -15,7 +15,7 @@ export async function ensureOwnerOrAdvisor(object: HasUser, guildObject?: HasGui
 
     if (user.observer) return;
     if (!guildObject && user.council) return;
-    if (guildObject && user.guilds[getGuildId(guildObject)]?.owner) return;
+    if (guildObject && user.guilds[getGuildId(guildObject)]?.council) return;
 
     throw "Permission denied (owner/advisor only).";
 }
