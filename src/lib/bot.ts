@@ -16,6 +16,7 @@ import {
     Partials,
     PublicThreadChannel,
     TextChannel,
+    VoiceChannel,
 } from "discord.js";
 import { readdirSync } from "node:fs";
 import logger from "./logger.js";
@@ -290,4 +291,8 @@ export const channels = {
     INFO_AND_RULES: await get<TextChannel>(Bun.env.INFO_AND_RULES!),
     ELECTIONS: await get<ForumChannel>(Bun.env.ELECTIONS!),
     ELECTION_DISCUSSIONS: await get<PublicThreadChannel>(Bun.env.ELECTION_DISCUSSIONS!),
+    STATS_MEMBERS: await get<VoiceChannel>(Bun.env.STATS_MEMBERS!),
+    STATS_VOTES: await get<VoiceChannel>(Bun.env.STATS_VOTES!),
+    STATS_QUORUM: await get<VoiceChannel>(Bun.env.STATS_QUORUM!),
+    STATS_HIGHER_QUORUM: await get<VoiceChannel>(Bun.env.STATS_HIGHER_QUORUM!),
 };

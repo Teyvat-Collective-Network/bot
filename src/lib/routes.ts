@@ -18,6 +18,7 @@ import postLog from "./routes/post-log.js";
 import postOrEditPoll from "./routes/post-or-edit-poll.js";
 import postPollRemind from "./routes/post-poll-remind.js";
 import postRolesync from "./routes/post-rolesync.js";
+import updateChannels from "./routes/update-channels.js";
 
 export default (app: App) =>
     app
@@ -39,4 +40,5 @@ export default (app: App) =>
         .use(postLog)
         .use(postOrEditPoll)
         .use(postPollRemind)
-        .use(postRolesync);
+        .use(postRolesync)
+        .use(updateChannels);

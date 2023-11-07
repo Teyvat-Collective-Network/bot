@@ -3,6 +3,7 @@ import { Elysia } from "elysia";
 import { readdir } from "node:fs/promises";
 import logger from "./lib/logger.js";
 import routes from "./lib/routes.js";
+import syncChannels from "./lib/sync-channels.js";
 
 const app = new Elysia()
     .use(bearer())
@@ -45,3 +46,5 @@ app.use(routes).listen(Bun.env.PORT || 4003);
 logger.info({ location: "482b00cd-d8a1-4ecd-94b6-02f006bd66a6" }, `TCN Bot is running at ${app.server?.hostname}:${app.server?.port}`);
 
 for (const task of await readdir("./src/tasks")) await import(`./tasks/${task}`);
+
+await syncChannels(true, true);
