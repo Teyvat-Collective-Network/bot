@@ -287,6 +287,7 @@ export const channels = {
     BANSHARE_DASHBOARD: await get<TextChannel>(Bun.env.BANSHARE_DASHBOARD!),
     BANSHARE_LOGS: await get<TextChannel>(Bun.env.BANSHARE_LOGS!),
     BOT_LOGS: await get<TextChannel>(Bun.env.BOT_LOGS!),
+    SECRET_SANTA_LOGS: await get<TextChannel>(Bun.env.SECRET_SANTA_LOGS!),
     VOTE_HERE: await get<TextChannel>(Bun.env.VOTE_HERE!),
     INFO_AND_RULES: await get<TextChannel>(Bun.env.INFO_AND_RULES!),
     ELECTIONS: await get<ForumChannel>(Bun.env.ELECTIONS!),
