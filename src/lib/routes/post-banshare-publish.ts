@@ -4,13 +4,13 @@ import { App } from "../../index.js";
 import api, { forgeToken } from "../api.js";
 import { banButton, components, crosspostComponents, execute, updateDashboard } from "../banshares.js";
 import bot, { channels } from "../bot.js";
-import { greyButton } from "../responses.js";
 import logger from "../logger.js";
+import { greyButton } from "../responses.js";
 
 export default (app: App) =>
     app.post(
         "/banshares/:message/publish",
-        async ({ bearer, params: { message: id } }) => {
+        async ({ bearer, params: { message: id }, query: { variant } }) => {
             const { idList, reason, severity, publisher }: { idList: string[]; reason: string; severity: string; publisher: string } = await api(
                 bearer,
                 `GET /banshares/${id}`,
@@ -21,7 +21,7 @@ export default (app: App) =>
 
             const message = await channels.BANSHARE_LOGS.messages.fetch(id);
             const embeds = message.embeds.map((x) => x.toJSON());
-            await channels.BOT_LOGS.send(`<@${publisher}> published ${message.url}`);
+            await channels.BOT_LOGS.send(`<@${publisher}> published ${message.url}${variant === "global-ban" ? " and banned the user from global chat" : ""}`);
 
             const users: Record<string, User | null> = {};
             const crossposts: { guild: string; channel: string; message: string }[] = [];
@@ -112,6 +112,9 @@ export default (app: App) =>
         {
             params: t.Object({
                 message: t.String(),
+            }),
+            query: t.Object({
+                variant: t.String(),
             }),
         },
     );

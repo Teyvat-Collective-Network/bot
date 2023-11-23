@@ -3,10 +3,10 @@ import api, { getToken } from "../../lib/api.js";
 import { channels } from "../../lib/bot.js";
 import { failure, success } from "../../lib/responses.js";
 
-export default async function (button: ButtonInteraction, message: string) {
+export default async function (button: ButtonInteraction, message: string, variant: string) {
     await button.update(success("The banshare is being published. You may dismiss this message."));
 
-    const req = await api(await getToken(button), `!POST /banshares/${message}/publish`);
+    const req = await api(await getToken(button), `!POST /banshares/${message}/publish?${new URLSearchParams({ variant })}`);
 
     if (!req.ok) {
         const { message } = await req.json();

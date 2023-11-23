@@ -77,6 +77,12 @@ export function components(published: boolean, severity: string): any[] {
                       {
                           type: ComponentType.Button,
                           style: ButtonStyle.Success,
+                          customId: "::banshares/publish:global-ban",
+                          label: "Publish & Ban from Global Chat",
+                      },
+                      {
+                          type: ComponentType.Button,
+                          style: ButtonStyle.Success,
                           customId: "::banshares/publish",
                           label: "Publish",
                       },
