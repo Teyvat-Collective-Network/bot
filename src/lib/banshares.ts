@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { ActionRowData, ButtonStyle, ComponentType, Guild, Message, MessageActionRowComponentData, MessageCreateOptions, User } from "discord.js";
 import api from "./api.js";
 import bot, { channels } from "./bot.js";
@@ -218,11 +219,22 @@ export async function execute(
 
             if (daedalus) {
                 try {
-                    await fetch(`${Bun.env.DAEDALUS_API}/moderation/history/${guild.id}/user/${id}`, {
+                    const g = guild.id;
+                    const u = id;
+                    const r = `TCN Banshare: ${reason}`;
+                    const o = crosspost.url;
+                    const i = guild.client.user.id;
+
+                    const h = crypto.createHmac("sha256", Bun.env.DAEDALUS_HMAC_KEY!).update(`${g} ${u} ${r} ${o} ${i}`).digest().toString("base64url");
+
+                    const req = await fetch(`${Bun.env.DAEDALUS_API}/api/ext/tcn/banshare?${new URLSearchParams({ g, u, r, o, i, h })}`, {
                         method: "POST",
-                        headers: { Authorization: `Bearer ${Bun.env.DAEDALUS_TOKEN}`, "Content-Type": "application/json" },
-                        body: JSON.stringify({ type: "ban", duration: 0, origin: crosspost.url, reason: `TCN Banshare: ${reason}` }),
+                        headers: { "Content-Type": "application/json" },
                     });
+
+                    if (!req.ok) throw req.status;
+
+                    logger.debug("Submitted banshare to Daedalus API.");
                 } catch (error) {
                     logger.error(error, "d5319e95-3c46-4d25-8f00-d1dfc012a682 Failed to submit banshare data to the Daedalus API:");
                 }
