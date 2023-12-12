@@ -48,8 +48,8 @@ export default async function (cmd: ChatInputCommandInteraction, wave: number, s
     await ensureObserver(cmd);
 
     const now = Date.now();
-    const start = `<t:${now}:${TimestampStyles.LongDateTime}>`;
-    const end = `<t:${now + (window ?? 7) * 24 * 60 * 60 * 1000}:${TimestampStyles.LongDateTime}>`;
+    const start = `<t:${Math.floor(now / 1000)}:${TimestampStyles.LongDateTime}>`;
+    const end = `<t:${Math.floor(now / 1000 + (window ?? 7) * 24 * 60 * 60)}:${TimestampStyles.LongDateTime}>`;
 
     const thread = await channels.ELECTIONS.threads.create({
         name: `Wave ${wave} Election`,
