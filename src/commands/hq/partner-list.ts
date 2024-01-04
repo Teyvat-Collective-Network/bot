@@ -1,5 +1,6 @@
 import { ChatInputCommandInteraction } from "discord.js";
 import api, { getToken } from "../../lib/api.js";
+import logger from "../../lib/logger.js";
 import { ensureObserver } from "../../lib/permissions.js";
 import { success } from "../../lib/responses.js";
 import { Attribute, Character, CommandData, TCNGuild } from "../../lib/types.js";
@@ -38,5 +39,6 @@ export default async function (cmd: ChatInputCommandInteraction) {
 
     await cmd.channel!.send(`**Autosync Guide**: ${Bun.env.WEBSITE}/info/partner-list#autosync`);
 
+    logger.info({ user: cmd.user.id, channel: cmd.channel!.id }, "cef19614-29c3-402a-bcbc-94a0c69eb01b Partner list generated");
     return "The long-form partner list has been generated.";
 }

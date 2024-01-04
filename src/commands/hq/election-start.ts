@@ -1,5 +1,6 @@
 import { ApplicationCommandOptionType, ChatInputCommandInteraction, TimestampStyles } from "discord.js";
 import { channels } from "../../lib/bot.js";
+import logger from "../../lib/logger.js";
 import { ensureObserver } from "../../lib/permissions.js";
 import { CommandData } from "../../lib/types.js";
 
@@ -69,5 +70,6 @@ export default async function (cmd: ChatInputCommandInteraction, wave: number, s
         allowedMentions: { roles: [Bun.env.COUNCIL_ADVISOR_ROLE!] },
     });
 
+    logger.info({ user: cmd.user.id }, "ddec39a4-f2c3-440d-a1b1-8d9176da6b4d Election initiated");
     return `${thread}`;
 }

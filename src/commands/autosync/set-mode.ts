@@ -1,5 +1,6 @@
 import { ApplicationCommandOptionType, ChatInputCommandInteraction } from "discord.js";
 import api, { getToken } from "../../lib/api.js";
+import logger from "../../lib/logger.js";
 import { ensureOwnerOrAdvisor } from "../../lib/permissions.js";
 import { CommandData } from "../../lib/types.js";
 
@@ -26,6 +27,6 @@ export default async function (cmd: ChatInputCommandInteraction, mode: string) {
 
     await ensureOwnerOrAdvisor(cmd, cmd.guild!);
     await api(await getToken(cmd), `PATCH /autosync/${cmd.guildId}`, { repost: mode === "repost" });
-
+    logger.info({ user: cmd.user.id, guild: cmd.guild!.id, mode }, "78a82496-aeba-47d5-bb38-ce52b6ba1b5d Autosync mode updated");
     return `The update mode has been set to \`${mode}\`.`;
 }

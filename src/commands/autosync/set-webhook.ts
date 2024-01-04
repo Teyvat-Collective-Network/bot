@@ -1,5 +1,6 @@
 import { APIWebhook, ApplicationCommandOptionType, ChatInputCommandInteraction } from "discord.js";
 import api, { getToken } from "../../lib/api.js";
+import logger from "../../lib/logger.js";
 import { ensureOwnerOrAdvisor } from "../../lib/permissions.js";
 import { CommandData } from "../../lib/types.js";
 
@@ -31,5 +32,6 @@ export default async function (cmd: ChatInputCommandInteraction, url: string | n
     }
 
     await api(await getToken(cmd), `PATCH /autosync/${cmd.guildId}`, { webhook: url });
+    logger.info({ user: cmd.user.id, guild: cmd.guild!.id, url }, "42127d7c-c8fa-4817-be02-e6e4361fb823 Autosync webhook updated");
     return `The webhook for partner lists has been ${url ? `set to ${webhook!.name}` : "unset"}.`;
 }

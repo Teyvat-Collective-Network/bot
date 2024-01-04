@@ -1,4 +1,5 @@
 import { ChatInputCommandInteraction, Message } from "discord.js";
+import logger from "../../lib/logger.js";
 import { ensureObserver } from "../../lib/permissions.js";
 import { CommandData } from "../../lib/types.js";
 
@@ -23,5 +24,6 @@ export default async function (cmd: ChatInputCommandInteraction) {
 
     delete statements[cmd.channelId];
 
+    logger.info({ user: cmd.user.id, channel: cmd.channel!.id }, "21cdaa56-47a8-430e-b5a4-147ab8195def Election summary posted");
     return "Your election summary has been posted.";
 }

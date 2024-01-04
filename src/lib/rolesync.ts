@@ -12,6 +12,8 @@ export default function () {
 }
 
 async function run() {
+    logger.info("2ca07dc5-8cb2-4e93-b66d-4534cf2eb35d Initiate rolesync run");
+
     const logs: any[][] = [];
 
     const _entries: (Rolesync & { guild: string })[] = await api(await forgeToken(), `GET /guilds/all-rolesync`);
