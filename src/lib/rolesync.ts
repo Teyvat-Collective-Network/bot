@@ -14,14 +14,21 @@ export default function () {
 async function run() {
     logger.info("2ca07dc5-8cb2-4e93-b66d-4534cf2eb35d Initiate rolesync run");
 
-    const logs: any[][] = [];
+    let logs = 0;
 
     const _entries: (Rolesync & { guild: string })[] = await api(await forgeToken(), `GET /guilds/all-rolesync`);
 
     const invoke = async (location: string, output: any[], fn: () => any) => {
         try {
             await fn();
-            logs.push(output);
+
+            await fetch(`${Bun.env.INTERNAL_API}/push`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ topic: "rolesync", messages: [output] }),
+            }).catch(() => {});
+
+            logs++;
         } catch (error) {
             logger.error(error, location);
         }
@@ -118,14 +125,7 @@ async function run() {
                 }
             }
 
-    if (logs.length > 0)
-        await fetch(`${Bun.env.INTERNAL_API}/push`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ topic: "rolesync", messages: logs }),
-        });
-
-    return logs.length;
+    return logs;
 }
 
 async function loop() {
