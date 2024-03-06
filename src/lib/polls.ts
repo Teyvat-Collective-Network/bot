@@ -5,23 +5,7 @@ import { embed, greyButton } from "./responses.js";
 import { Poll, PollResults, PollVote } from "./types.js";
 
 export async function render(poll: Poll): Promise<MessageCreateOptions & MessageEditOptions> {
-    const results: PollResults = poll.message
-        ? await api(await getToken("111111111111111111"), `GET /polls/${poll.id}/results`)
-        : {
-              mode: poll.mode,
-              abstains: 0,
-              ballots: 0,
-              turnout: 0,
-              yes: 0,
-              no: 0,
-              induct: 0,
-              preinduct: 0,
-              reject: 0,
-              extend: 0,
-              winners: [],
-              tied: poll.mode === "election" ? poll.candidates : [],
-              scores: poll.mode === "selection" ? Object.fromEntries(poll.options.map((x) => [x, 0])) : {},
-          };
+    const results: PollResults = await api(await getToken("111111111111111111"), `GET /polls/${poll.id}/results`);
 
     return {
         embeds: [
