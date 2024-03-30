@@ -257,7 +257,7 @@ export function renderVote(vote: Partial<PollVote>): InteractionReplyOptions {
     if (vote.mode === "proposal")
         return embed({
             title: `Voted in ${vote.yes ? "support" : "opposition"}`,
-            description: `You have voted ${vote.yes ? "in favor of" : "again"} the motion.`,
+            description: `You have voted ${vote.yes ? "in favor of" : "against"} the motion.`,
         });
 
     if (vote.mode === "induction")
